@@ -9,6 +9,12 @@ Feature: Pruebas automatizadas para la API de personajes de Marvel
     Then status 200
     And match response == []
 
+  Scenario: Crear personaje (exitoso)
+    Given request { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
+    When method post
+    Then status 201
+    And match response contains { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
+
   Scenario: Obtener personaje por ID (exitoso)
     Given path '1'
     When method get
@@ -20,12 +26,6 @@ Feature: Pruebas automatizadas para la API de personajes de Marvel
     When method get
     Then status 404
     And match response == { error: 'Character not found' }
-
-  Scenario: Crear personaje (exitoso)
-    Given request { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
-    When method post
-    Then status 201
-    And match response contains { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
 
   Scenario: Crear personaje (nombre duplicado)
     Given request { name: 'Iron Man', alterego: 'Otro', description: 'Otro', powers: ['Armor'] }
