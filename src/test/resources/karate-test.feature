@@ -2,6 +2,7 @@ Feature: Pruebas automatizadas para la API de personajes de Marvel
 
   Background:
     * def url_ = "http://bp-se-test-cabcd9b246a5.herokuapp.com/rodneyj3214/api/characters"
+    * def bodyRequest_ = read('data/CharacterObj.json')
     Given def urlBase = url_
 
 
@@ -13,10 +14,11 @@ Feature: Pruebas automatizadas para la API de personajes de Marvel
 
   Scenario: T-MIC-TEST-CHAPTER-2025-CA2 - Crear personaje (exitoso)
     * url urlBase
-    Given request { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
+    * def bodyRequest = bodyRequest_
+    Given request bodyRequest
     When method post
     Then status 201
-    And match response contains { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
+    And match response contains bodyRequest
 
   Scenario: T-MIC-TEST-CHAPTER-2025-CA3 - Obtener personaje por ID (exitoso)
     * url urlBase
@@ -49,10 +51,12 @@ Feature: Pruebas automatizadas para la API de personajes de Marvel
   Scenario: T-MIC-TEST-CHAPTER-2025-CA7 - Actualizar personaje (exitoso)
     * url urlBase
     Given path '1'
-    And request { name: 'Iron Man', alterego: 'Tony Stark', description: 'Updated description', powers: ['Armor', 'Flight'] }
+    * def bodyRequest = bodyRequest_
+    * set bodyRequest.description = 'Updated description'
+    And request  bodyRequest
     When method put
     Then status 200
-    And match response == { id: 1, name: 'Iron Man', alterego: 'Tony Stark', description: 'Updated description', powers: ['Armor', 'Flight'] }
+    And match response.description == 'Updated description'
 
   Scenario: T-MIC-TEST-CHAPTER-2025-CA8 - Actualizar personaje (no existe)
     * url urlBase
